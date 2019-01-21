@@ -2,21 +2,23 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
-	"github.com/ronaudinho/bijipipe/pkg/dif/http"
+	difHttp "github.com/ronaudinho/bijipipe/pkg/dif/http"
 
 	"github.com/gorilla/handlers"
 )
 
 var (
-	difHandler *http.DifHttpHandler
+	difHandler *difHttp.DifHttpHandler
 )
 
 func main() {
-	difHandler = http.NewDifHttpHandler("pelirlo")
+	difHandler = difHttp.NewDifHttpHandler("pelirlo")
 	router := handlers.CombinedLoggingHandler(os.Stdout, DifHttpRoute())
 	router = handlers.RecoveryHandler()(router)
 
 	fmt.Println("biji at 8082")
+	fmt.Println(http.ListenAndServe(":8082", router))
 }
